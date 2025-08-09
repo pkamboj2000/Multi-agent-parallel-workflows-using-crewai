@@ -1,24 +1,46 @@
-# 🚗 Automotive Review Crew: A Parallel and Sequential Agent Workflow
+# 🚗 Automotive Review Crew — Parallel + Sequential Multi-Agent Workflow
 
-This project demonstrates a multi-agent system built with the `crewai` framework to perform a comprehensive automotive review. It showcases an efficient workflow that combines parallel data collection with sequential synthesis to deliver a single, unbiased report.
+This project demonstrates a **multi-agent system** built with [`CrewAI`](https://github.com/joaomdmoura/crewai) to produce a **single, unbiased automotive review**.  
+It combines **parallel information gathering** with **sequential synthesis** to deliver a concise report with sources.
 
-## 🚀 How It Works
+---
 
-The workflow is a two-step process designed to gather and synthesize information quickly and effectively:
+## 📜 Overview
 
-### 1. Parallel Information Gathering
+**Two-stage workflow:**
 
-Three reviewer agents (`reviewer1`, `reviewer2`, `reviewer3`) are assigned to search specific automotive websites (Edmunds, Car and Driver, Top Gear) for a given topic. These tasks run **simultaneously** to gather information efficiently.
+1) **Parallel Information Gathering** — three reviewer agents run *at the same time* on different sites.  
+2) **Sequential Synthesis** — a fourth agent (the **Synthesizer**) waits for the three results and produces the final report.
 
-**Why this is beneficial:** Instead of manually visiting each site one by one, these agents perform the searches in parallel. This significantly speeds up the information collection process and ensures that we get a broad, non-biased view by consulting multiple sources at once.
+---
 
-### 2. Sequential Synthesis
+## 👥 Agents at a Glance
 
-After the three reviewers have completed their work, a fourth agent (`synthesizer`) takes their combined outputs as context. This task runs **sequentially**, as it depends on the completion of the previous three. The synthesizer agent then creates a final report that includes:
+| Agent        | Source(s)                           | Role                                                            |
+|--------------|-------------------------------------|------------------------------------------------------------------|
+| `reviewer1`  | Edmunds                             | Extracts pros/cons, key highlights, and link(s)                 |
+| `reviewer2`  | Car and Driver                      | Extracts pros/cons, key highlights, and link(s)                 |
+| `reviewer3`  | Top Gear / Autocar / What Car       | Extracts pros/cons, unique perspectives, and link(s)            |
+| `synthesizer`| **All three reviewers (context)**   | **Combines everything into consensus bullets + final verdict + agreement/differences** |
 
-* A list of consensus points.
-* A final verdict for buyers.
-* Highlights of where the reviewers agree and disagree.
+---
 
-**Why this is beneficial:** The synthesizer's job is to reconcile differing opinions and extract a single, objective summary. This prevents the user from having to read through three separate, potentially biased reports. The final output is a clean, non-redundant, and comprehensive report ready for immediate use.
+## 💡 Why Parallel + Multi-Source? (Benefits)
+
+- **Saves time:** running three reviewers **in parallel** cuts wall-clock time compared to visiting sites one by one.  
+- **Reduces bias:** no single outlet can “trap” the result; the summarizer compares multiple sources and surfaces **consensus vs. disagreement**.  
+- **More robust:** if one site is slow, blocked, or low-quality, the other agents still complete, so the final report doesn’t fail.  
+- **Broader coverage:** different publications emphasize different aspects (performance, comfort, tech, value), giving a fuller picture.  
+- **Traceable:** each reviewer returns **plain URLs**, so readers can audit the sources directly.
+
+---
+
+## ⚙️ Execution Model
+
+### 1️⃣ Parallel Reviewers
+Reviewer tasks are marked asynchronous so they **run simultaneously**:
+```python
+t1.async_execution = True
+t2.async_execution = True
+t3.async_execution = True
 
