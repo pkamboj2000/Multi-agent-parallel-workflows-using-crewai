@@ -35,12 +35,5 @@ It combines **parallel information gathering** with **sequential synthesis** to 
 
 ---
 
-## ⚙️ Execution Model
 
-### 1️⃣ Parallel Reviewers
-Reviewer tasks are marked asynchronous so they **run simultaneously**:
-```python
-t1.async_execution = True
-t2.async_execution = True
-t3.async_execution = True
 
