@@ -8,7 +8,6 @@ It combines **parallel information gathering** with **sequential synthesis** to 
 ## 📜 Overview
 
 **Two-stage workflow:**
-
 1) **Parallel Information Gathering** — three reviewer agents run *at the same time* on different sites.  
 2) **Sequential Synthesis** — a fourth agent (the **Synthesizer**) waits for the three results and produces the final report.
 
@@ -25,15 +24,98 @@ It combines **parallel information gathering** with **sequential synthesis** to 
 
 ---
 
-## 💡 Why Parallel + Multi-Source? (Benefits)
+## 🚀 Features
 
-- **Saves time:** running three reviewers **in parallel** cuts wall-clock time compared to visiting sites one by one.  
-- **Reduces bias:** no single outlet can “trap” the result; the summarizer compares multiple sources and surfaces **consensus vs. disagreement**.  
-- **More robust:** if one site is slow, blocked, or low-quality, the other agents still complete, so the final report doesn’t fail.  
-- **Broader coverage:** different publications emphasize different aspects (performance, comfort, tech, value), giving a fuller picture.  
-- **Traceable:** each reviewer returns **plain URLs**, so readers can audit the sources directly.
+- **Parallel Processing**: Uses `ThreadPoolExecutor` for concurrent web searches
+- **Multi-Source Aggregation**: Combines reviews from 3+ automotive sources
+- **AI-Powered Synthesis**: Creates comprehensive, non-redundant final reviews
+- **Customizable Topics**: Easy to change vehicle/topic for review
+- **Rate Limiting**: Built-in delays to respect website policies
 
 ---
 
+## 📋 Requirements
 
+```bash
+pip install crewai
+pip install langchain-community
+pip install duckduckgo-search
+```
 
+### Environment Variables
+```bash
+export GROQ_API_KEY="your-groq-api-key-here"
+```
+
+---
+
+## 🛠️ Installation & Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd automotive-review-aggregator
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   # Create .env file
+   echo "GROQ_API_KEY=your-groq-api-key" > .env
+   ```
+
+4. **Run the notebook**
+   ```bash
+   jupyter notebook code.ipynb
+   ```
+
+---
+
+## 🎯 Usage
+
+### Basic Usage
+1. Open `code.ipynb` in Jupyter
+2. Set your desired topic:
+   ```python
+   topic = "2024 Honda Civic review"  # Change this to any vehicle
+   ```
+3. Run all cells to get comprehensive review
+
+### Custom Topics
+Simply modify the topic variable:
+```python
+topic = "2025 Toyota Camry review"
+topic = "2024 BMW X3 reliability"
+topic = "Ford F-150 Lightning range test"
+```
+
+---
+
+## ⚡ Performance
+
+- **Sequential Execution**: ~21 seconds
+- **Parallel Execution**: ~7 seconds  
+- **Speed Improvement**: 66% faster processing
+
+---
+
+## 🔧 Technical Details
+
+### Agent Configuration
+- **LLM**: Groq Qwen 3-32B (fast inference)
+- **Search Tool**: DuckDuckGo (rate-limited)
+- **Concurrency**: ThreadPoolExecutor with 3 workers
+
+### Parallel Processing Implementation
+```python
+with ThreadPoolExecutor(max_workers=3) as executor:
+    future_t1 = executor.submit(run_task_in_parallel, t1, reviewer1)
+    future_t2 = executor.submit(run_task_in_parallel, t2, reviewer2) 
+    future_t3 = executor.submit(run_task_in_parallel, t3, reviewer3)
+```
+
+---
